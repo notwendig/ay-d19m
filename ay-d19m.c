@@ -375,7 +375,7 @@ ayd19m_read (struct file *filp, char __user * buf, size_t count, loff_t * f_pos)
     struct list_head *todo = (struct list_head *) filp->private_data;
     unsigned n;
 
-    printk(KERN_DEBUG CLASS_NAME ": read pbuf=%p, cnt=%ld, off=%lld\n", buf, count, *f_pos);
+    printk(KERN_DEBUG CLASS_NAME ": read pbuf=%p, cnt=%d, off=%lld\n", buf, count, *f_pos);
 
     if(!(filp->f_flags & O_NONBLOCK))
     {
@@ -521,7 +521,8 @@ int
 ayd19m_init_module (void)
 {
     int result;
-
+  
+  	 printk(KERN_INFO CLASS_NAME ": Initializing ...\n");
     mutex_init(&rmutex);
     INIT_LIST_HEAD(&todo_list);
     init_waitqueue_head (&rqueue);
@@ -551,7 +552,7 @@ ayd19m_init_module (void)
 
   irqlineD0 = gpio_to_irq (ay_d19m_d0);
   irqlineD1 = gpio_to_irq (ay_d19m_d1);
-  printk (KERN_INFO CLASS_NAME ": The D0/D1 is mapped to IRQ: %d/%d\n", irqlineD0, irqlineD1);
+  printk (KERN_INFO CLASS_NAME ": The D0/D1 mapped to IRQ: %d/%d\n", irqlineD0, irqlineD1);
 
   result = request_threaded_irq (irqlineD0,	// The interrupt number requested
                  ay_d19m_irqdata,	// The pointer to the handler function below
@@ -567,7 +568,7 @@ ayd19m_init_module (void)
                  0);	// The *dev_id for shared interrupt lines, NULL is okay
   printk (KERN_INFO CLASS_NAME ": The D1 interrupt request result is: %d\n", result);
 
-   printk(KERN_INFO CLASS_NAME ": Initializing the EBBChar LKM\n");
+ 
 
    // Try to dynamically allocate a major number for the device -- more difficult but worth it
    ayd19m_major = register_chrdev(0, DEVICE_NAME, &ayd19m_fops);

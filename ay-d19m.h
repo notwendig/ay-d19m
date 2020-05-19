@@ -35,21 +35,21 @@
 #define	MAX_READSZ		30
 
 #define AY_D19M_POWER 	18 	/* GPIO18   out  Iono open collector output         */
-#define AY_D19M_D0 		4	/* GPIO4    in   Iono Wiegand DATA0 generic TTL I/O */
+#define AY_D19M_D0 		4		/* GPIO4    in   Iono Wiegand DATA0 generic TTL I/O */
 #define AY_D19M_D1 		26 	/* GPIO26   in   Iono Wiegand DATA1 generic TTL I/O */
 
 /*
- * AYD19M Keypad Transmission Format (1 to 8). Default 1
+ * AYD19M Keypad Transmission Format (0 to 7). Default 0 (SKW06RF)  
  */
-typedef enum  {	// Read format				Descriptio
-    SKW06RF,    // "n" n=[0-9*#] 			Single Key, Wiegand 6-Bit (Rosslare Format). Factory setting
-    SKW06NP,    // "n" n=[0-9*#] 			Single Key, Wiegand 6-Bit with Nibble + Parity Bits
-    SKW08NC,    // "n" n=[0-9*#] 			Single Key, Wiegand 8-Bit, Nibbles Complemented
-    K4W26BF,    // "f,n" f=Facility,n=code 	4 Keys Binary + Facility code, Wiegand 26-Bit
-    K5W26FC,    // "f,n" f=Facility,n=code 	1 to 5 Keys + Facility code, Wiegand 26-Bit
-    K6W26BCD,   // "n" n=code 				6 Keys BCD and Parity Bits, Wiegand 26-Bit
-    SK3X4MX,    // not supported yet 		Single Key, 3x4 Matrix Keypad
-    K8CDBCD     // not supported yet 		1 to 8 Keys BCD, Clock & Data Single Key
+typedef enum  { // Read format			Description
+    SKW06RF,    // "M=0, K=%c"			Single Key, Wiegand 6-Bit (Rosslare Format). Factory setting
+    SKW06NP,    // "M=1, K=%c" 			Single Key, Wiegand 6-Bit with Nibble + Parity Bits
+    SKW08NC,    // "M=2, K=%c" 			Single Key, Wiegand 8-Bit, Nibbles Complemented
+    K4W26BF,    // "M=3, F=%d, C=%d" 	4 Keys Binary + Facility code, Wiegand 26-Bit
+    K5W26FC,    // "M=4, F=%d, C=%d" 	1 to 5 Keys + Facility code, Wiegand 26-Bit
+    K6W26BCD,   // "M=5, F=%d, C=%d"	6 Keys BCD and Parity Bits, Wiegand 26-Bit
+    SK3X4MX,    // not supported yet	Single Key, 3x4 Matrix Keypad
+    K8CDBCD     // not supported yet	1 to 8 Keys BCD, Clock & Data Single Key
 }ayd19m_mode_t;
 
 /*
