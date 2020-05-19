@@ -4,7 +4,7 @@
     ay-d19m project is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    any later version.
 
     ay-d19m project is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -58,7 +58,7 @@ MODULE_PARM_DESC (ay_d19m_d0, CLASS_NAME " DATA0 GPOI Port. Default GPIO4");
 module_param (ay_d19m_d1, uint, 0644);
 MODULE_PARM_DESC (ay_d19m_d1, CLASS_NAME " DATA1 GPOI Port. Defaul GPIO26");
 module_param (ay_d19m_mode, uint, 0644);
-MODULE_PARM_DESC (ay_d19m_mode, CLASS_NAME " Keypad Transmission (0..) Format. Default 2");
+MODULE_PARM_DESC (ay_d19m_mode, CLASS_NAME " Keypad Transmission (0..7) Format. Default 0");
 
 int ayd19m_major = 0;
 int ayd19m_minor = 0;
@@ -241,7 +241,7 @@ static int fmt_K4W26BF(uint32_t code0, uint32_t code1, char *buffer, size_t bsz)
         }
         if (ep == cep && op == cop)
         {
-            snprintf(buffer, bsz, "M=%d, F=%d, C=%d\n", ay_d19m_mode, facility, code);
+            snprintf(buffer, bsz, "M=%d, F=%d, C=%d", ay_d19m_mode, facility, code);
         }
         else
             *buffer = 0;
@@ -283,7 +283,7 @@ static int fmt_K5W26FC(uint32_t code0, uint32_t code1, char *buffer, size_t bsz)
         }
         if (ep == cep && op == cop)
         {
-            snprintf(buffer, bsz, "M=%d, F=%d, C=%d\n", ay_d19m_mode, facility, code);
+            snprintf(buffer, bsz, "M=%d, F=%d, C=%d", ay_d19m_mode, facility, code);
         }
         else
             *buffer = 0;
@@ -324,7 +324,7 @@ static int fmt_K6W26BCD(uint32_t code0, uint32_t code1, char *buffer, size_t bsz
         }
         if (ep == cep && op == cop)
         {
-            snprintf(buffer, bsz, "M=%d,C=%6.6x\n", ay_d19m_mode, code);
+            snprintf(buffer, bsz, "M=%d, C=%6.6x", ay_d19m_mode, code);
         }
         else
             *buffer = 0;
@@ -341,13 +341,13 @@ static int fmt_K6W26BCD(uint32_t code0, uint32_t code1, char *buffer, size_t bsz
 
 static int fmt_SK3X4MX(uint32_t code0, uint32_t code1, char *buffer, size_t bsz)    // not supported yet 		Single Key, 3x4 Matrix Keypad
 {
-	snprintf(buffer, bsz,"Error: Unsupported mode %d",ay_d19m_mode);
+	snprintf(buffer, bsz,"M=%d, Error: Unsupported mode",ay_d19m_mode);
 	return strlen(buffer);
 }
 
 static int fmt_K8CDBCD(uint32_t code0, uint32_t code1, char *buffer, size_t bsz)     // not supported yet 		1 to 8 Keys BCD, Clock & Data Single Key
 {
-	snprintf(buffer, bsz,"Error: Unsupported mode %d",ay_d19m_mode);
+	snprintf(buffer, bsz,"M=%d, Error: Unsupported mode",ay_d19m_mode);
 	return strlen(buffer);
 }
 
@@ -407,7 +407,7 @@ ayd19m_read (struct file *filp, char __user * buf, size_t count, loff_t * f_pos)
 		}
 		else
 		{
-			//todo: check *f_pos -= n;
+			*f_pos -= n;
 			list_del(&data->node);
 			kfree(data);
 			retval = 0;
