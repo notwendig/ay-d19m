@@ -1,4 +1,4 @@
-wiegand-linux AY-D19M Drevice Driver
+wiegand-linux AY-D19M Device Driver
 ====================================
 
 V1.0.0 untested
