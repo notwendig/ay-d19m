@@ -91,3 +91,11 @@ cat /dev/ayd19m
 
 [enter code on the Device]
 
+
+Annotations
+===========
+Only wiegand 26 bit formats are supported
+
+Card Format 	Facility Sequence	Notes
+26-bit H10301 	0-255		0-65,535 	Standard, most common format
+26-Bit 40134 	0-255 	0-65,535 	For Indala systems
