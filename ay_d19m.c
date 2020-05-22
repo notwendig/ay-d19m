@@ -18,7 +18,7 @@
  Mi 20. Mai 01:23:43 CEST 2020 Version 1.0.0 untested
 
  */
-#include "ay-d19m.h"
+#include "ay_d19m.h"
 #include "decoder.c"
 
 #include <linux/init.h>
@@ -40,15 +40,11 @@
 #include <linux/wait.h>
 #include <linux/delay.h>
 
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Jürgen Willi Sievers <JSievers@NadiSoft.de>");
-MODULE_DESCRIPTION("AY_D19M KeyPad Driver.");
-MODULE_VERSION("0.1");
-
 static unsigned ay_d19m_power = AY_D19M_POWER;
 static unsigned ay_d19m_d0 = AY_D19M_D0;
 static unsigned ay_d19m_d1 = AY_D19M_D1;
-unsigned ay_d19m_mode = K6W26BCD;
+static unsigned ay_d19m_mode = SKW06RF;
+
 
 module_param(ay_d19m_power, uint, 0644);
 MODULE_PARM_DESC(ay_d19m_power, CLASS_NAME " Power GPOI Port. Default GPIO18");
@@ -458,3 +454,9 @@ static int powerOff(void)
 
 module_init(ayd19m_init_module);
 module_exit(ayd19m_cleanup_module);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Jürgen Willi Sievers <JSievers@NadiSoft.de>");
+MODULE_DESCRIPTION("AY_D19M KeyPad Driver.");
+MODULE_VERSION("0.1");
+

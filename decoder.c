@@ -5,10 +5,8 @@
  *      Author: juergen
  */
 
-#include "ay-d19m.h"
+#include "ay_d19m.h"
 #include "decoder.h"
-
-extern unsigned ay_d19m_mode;
 
 int wiegand26(uint32_t code0,  char *buffer, size_t bsz)
 {
@@ -64,14 +62,14 @@ int fmt_SKW06RF(uint32_t code0, int bits,  char *buffer, size_t bsz)
 			else if (code == 11) key = '*';
 			else if (code == 14) key = '#';
 			else key = '0' + code;
-			snprintf(buffer, bsz, "R=%d, M=%d, K=\'%c\', L=%d", RES_OK, ay_d19m_mode, key, bits);
+			snprintf(buffer, bsz, "R=%d, M=%d, K=\'%c\', L=%d", RES_OK, SKW06RF, key, bits);
 		}
 		else
-			snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_DATAERR, ay_d19m_mode, code0, bits);
+			snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_DATAERR, SKW06RF, code0, bits);
 	}
 	else
 	{
-		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, ay_d19m_mode, code0, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, SKW06RF, code0, bits);
 	}
 	return strlen(buffer);
 }
@@ -101,14 +99,14 @@ int fmt_SKW06NP(uint32_t code0, int bits,  char *buffer, size_t bsz)
 			if (code == 10) key = '*';
 			else if (code == 11) key = '#';
 			else key = '0' + code;
-			snprintf(buffer, bsz, "R=%d, M=%d, K=\'%c\', L=%d", RES_OK, ay_d19m_mode, key, bits);
+			snprintf(buffer, bsz, "R=%d, M=%d, K=\'%c\', L=%d", RES_OK, SKW06NP, key, bits);
 		}
 		else
-			snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_DATAERR, ay_d19m_mode, code0, bits);
+			snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_DATAERR, SKW06NP, code0, bits);
 	}
 	else
 	{
-		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, ay_d19m_mode, code0, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, SKW06NP, code0, bits);
 	}
 
 	return strlen(buffer);
@@ -126,11 +124,11 @@ int fmt_SKW08NC(uint32_t code0, int bits, char *buffer, size_t bsz)
 		if (code == 10) key = '*';
 		else if (code == 11) key = '#';
 		else key = '0' + code;
-		snprintf(buffer, bsz, "R=%d, M=%d, K=\'%c\', L=%d", RES_OK, ay_d19m_mode, key, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, K=\'%c\', L=%d", RES_OK, SKW08NC, key, bits);
 	}
 	else
 	{
-		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_DATAERR, ay_d19m_mode, code0, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_DATAERR, SKW08NC, code0, bits);
 	}
 
 	return strlen(buffer);
@@ -154,11 +152,11 @@ int fmt_K4W26BF(uint32_t code0, int bits, char *buffer, size_t bsz)
 
 	if (ep & op)
 	{
-		snprintf(buffer, bsz, "R=%d, M=%d, F=%d, D=%d, L=%d", RES_OK, ay_d19m_mode, facility, code, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, F=%d, D=%d, L=%d", RES_OK, K4W26BF, facility, code, bits);
 	}
 	else
 	{
-		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, ay_d19m_mode, code0, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, K4W26BF, code0, bits);
 	}
 
 	return strlen(buffer);
@@ -182,11 +180,11 @@ int fmt_K5W26FC(uint32_t code0, int bits, char *buffer, size_t bsz)
 
 	if (ep & op)
 	{
-		snprintf(buffer, bsz, "R=%d, M=%d, F=%d, D=%d, L=%d", RES_OK, ay_d19m_mode, facility, code, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, F=%d, D=%d, L=%d", RES_OK, K5W26FC, facility, code, bits);
 	}
 	else
 	{
-		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, ay_d19m_mode, code0, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, K5W26FC, code0, bits);
 	}
 
 	return strlen(buffer);
@@ -209,11 +207,11 @@ int fmt_K6W26BCD(uint32_t code0, int bits, char *buffer, size_t bsz)
 
 	if (ep & op)
 	{
-		snprintf(buffer, bsz, "R=%d, M=%d, D=%X, L=%d", RES_OK, ay_d19m_mode, code, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, D=%X, L=%d", RES_OK, K6W26BCD, code, bits);
 	}
 	else
 	{
-		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, ay_d19m_mode, code0, bits);
+		snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_PARITY, K6W26BCD, code0, bits);
 	}
 
 	return strlen(buffer);
@@ -221,12 +219,12 @@ int fmt_K6W26BCD(uint32_t code0, int bits, char *buffer, size_t bsz)
 
 int fmt_SK3X4MX(uint32_t code0, int bits, char *buffer, size_t bsz) // not supported yet 		Single Key, 3x4 Matrix Keypad
 {
-	snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_NOSUPORT, ay_d19m_mode, code0, bits);
+	snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_NOSUPORT, SK3X4MX, code0, bits);
 	return strlen(buffer);
 }
 
 int fmt_K8CDBCD(uint32_t code0, int bits, char *buffer, size_t bsz) // not supported yet 		1 to 8 Keys BCD, Clock & Data Single Key
 {
-	snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_NOSUPORT, ay_d19m_mode, code0, bits);
+	snprintf(buffer, bsz, "R=%d, M=%d, D=%8.8X, L=%d", RES_NOSUPORT, K8CDBCD, code0, bits);
 	return strlen(buffer);
 }
