@@ -12,7 +12,7 @@
 #include <linux/module.h>
 
 
-#define	MAX_READSZ		35
+#define	MAX_READSZ		60
 
 typedef int (*fmt)( uint32_t, int, char *, size_t);
 

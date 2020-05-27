@@ -39,6 +39,7 @@
 #include <linux/list.h>
 #include <linux/wait.h>
 #include <linux/delay.h>
+#include <linux/poll.h>
 
 static unsigned ay_d19m_power = AY_D19M_POWER;
 static unsigned ay_d19m_d0 = AY_D19M_D0;
@@ -218,12 +219,29 @@ int ayd19m_open(struct inode *inode, struct file *filp)
 	return retval;
 }
 
-struct file_operations ayd19m_fops = { .owner = THIS_MODULE,
+static __poll_t ayd19m_poll (struct file *filp,struct  poll_table_struct *tblp)
+{
+	__poll_t res  = 0;
+	struct list_head *todo = (struct list_head *) filp->private_data;
+
+	poll_wait(filp, &rqueue, tblp);
+
+	if (todo->next != todo)
+		res = POLLIN | POLLRDNORM;
+	printk(KERN_DEBUG CLASS_NAME ": poll %d.\n",res);
+	return res;
+}
+
+struct file_operations ayd19m_fops = {
+	.owner = THIS_MODULE,
 //  .llseek = ayd19m_llseek,
-        .read = ayd19m_read,
+    .read = ayd19m_read,
 //  .write = ayd19m_write,
+    .poll = ayd19m_poll,
 // .unlocked_ioctl = ayd19m_ioctl,
-        .open = ayd19m_open, .release = ayd19m_release, };
+    .open = ayd19m_open,
+
+    .release = ayd19m_release, };
 
 void ayd19m_cleanup_module(void)
 {
@@ -247,6 +265,13 @@ void ayd19m_cleanup_module(void)
 	unregister_chrdev(ayd19m_major, DEVICE_NAME);           // unregister the major number
 	printk(KERN_INFO CLASS_NAME ": cleanup success\n");
 }
+
+int ayd19m_uevent(struct device *dev, struct kobj_uevent_env *env)
+{
+    add_uevent_var(env, "DEVMODE=%#o", 0444);
+    return 0;
+}
+
 
 int ayd19m_init_module(void)
 {
@@ -277,10 +302,11 @@ int ayd19m_init_module(void)
 			}
 			else
 			{
-				printk(KERN_INFO CLASS_NAME ": device class registered correctly\n");
 
+				printk(KERN_INFO CLASS_NAME ": device class registered correctly\n");
+				ay_d19m_Class->dev_uevent = ayd19m_uevent;
 				// Register the device driver
-				ay_d19m_Device = device_create(ay_d19m_Class, NULL, MKDEV(ayd19m_major, 0), NULL, DEVICE_NAME);
+				ay_d19m_Device = device_create(ay_d19m_Class, NULL, MKDEV(ayd19m_major, ayd19m_minor), NULL, DEVICE_NAME);
 				if (IS_ERR(ay_d19m_Device))               // Clean up if there is an error
 				{
 					class_destroy(ay_d19m_Class);           // Repeated code but the alternative is goto statements
