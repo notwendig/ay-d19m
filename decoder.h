@@ -16,7 +16,7 @@
 
 typedef int (*fmt)( uint32_t, int, char *, size_t);
 
-int wiegand26(uint32_t code0,  char *buffer, size_t bsz);
+int fmt_wiegand26(uint32_t code0, int bits,  char *buffer, size_t bsz);
 
 typedef enum {
 	RES_OK,
@@ -28,17 +28,18 @@ typedef enum {
  * AYD19M Keypad Transmission Format (0 to 7). Default 0 (SKW06RF)
  */
 typedef enum  { // Read format			Description
-    SKW06RF,    // "M=0, K=%c"			Single Key, Wiegand 6-Bit (Rosslare Format). Factory setting
-    SKW06NP,    // "M=1, K=%c" 			Single Key, Wiegand 6-Bit with Nibble + Parity Bits
-    SKW08NC,    // "M=2, K=%c" 			Single Key, Wiegand 8-Bit, Nibbles Complemented
-    K4W26BF,    // "M=3, F=%d, C=%d" 	4 Keys Binary + Facility code, Wiegand 26-Bit
-    K5W26FC,    // "M=4, F=%d, C=%d" 	1 to 5 Keys + Facility code, Wiegand 26-Bit
-    K6W26BCD,   // "M=5, F=%d, C=%d"	6 Keys BCD and Parity Bits, Wiegand 26-Bit
-    SK3X4MX,    // not supported yet	Single Key, 3x4 Matrix Keypad
-    K8CDBCD,     // not supported yet	1 to 8 Keys BCD, Clock & Data Single Key
-
-    WIEGAND26	// Wiegand 26 (H10301, 40134) Card Format
+	WIEGAND26,  // Wiegand 26 (H10301, 40134) Card Format
+    SKW06RF,    // "M=1, K=%c"			Single Key, Wiegand 6-Bit (Rosslare Format). Factory setting
+    SKW06NP,    // "M=2, K=%c" 			Single Key, Wiegand 6-Bit with Nibble + Parity Bits
+    SKW08NC,    // "M=3, K=%c" 			Single Key, Wiegand 8-Bit, Nibbles Complemented
+    K4W26BF,    // "M=4, F=%d, C=%d" 	4 Keys Binary + Facility code, Wiegand 26-Bit
+    K5W26FC,    // "M=5, F=%d, C=%d" 	1 to 5 Keys + Facility code, Wiegand 26-Bit
+    K6W26BCD,   // "M=6, F=%d, C=%d"	6 Keys BCD and Parity Bits, Wiegand 26-Bit
+    SK3X4MX,    // M=7 not supported yet	Single Key, 3x4 Matrix Keypad
+    K8CDBCD,    // M=8 not supported yet	1 to 8 Keys BCD, Clock & Data Single Key
 }ayd19m_mode_t;
+
+ayd19m_mode_t mode(void);
 
 /*
  * SKW06RF

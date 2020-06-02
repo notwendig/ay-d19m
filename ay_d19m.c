@@ -61,7 +61,7 @@ int ayd19m_minor = 0;
 
 struct timer_list wiegand_timeout;
 
-static const int wiegandLength[] = { 6 - 1, 6 - 1, 8 - 1, 26 - 1, 26 - 1, 26 - 1, 0, 0 };
+static const int wiegandLength[] = {26 - 1, 6 - 1, 6 - 1, 8 - 1, 26 - 1, 26 - 1, 26 - 1, 0, 0 };
 static const uint32_t wiegandMask = 0x80000000;
 static volatile uint32_t bitmsk;
 static volatile uint32_t data0;
@@ -93,9 +93,8 @@ static int releaseGPIO(void);
 static struct class* ay_d19m_Class = NULL; ///< The device-driver class struct pointer
 static struct device* ay_d19m_Device = NULL; ///< The device-driver device struct pointer
 
-
-
 static const fmt ffmt[] = {
+		fmt_wiegand26,
 		fmt_SKW06RF,
 		fmt_SKW06NP,
 		fmt_SKW08NC,
@@ -106,6 +105,10 @@ static const fmt ffmt[] = {
 		fmt_K8CDBCD
 };
 
+ayd19m_mode_t mode()
+{
+	return ay_d19m_mode;
+}
 /*
  * Data management: read and write.
  */
@@ -224,11 +227,16 @@ static __poll_t ayd19m_poll (struct file *filp,struct  poll_table_struct *tblp)
 	__poll_t res  = 0;
 	struct list_head *todo = (struct list_head *) filp->private_data;
 
+	mutex_lock_interruptible(&rmutex);
 	poll_wait(filp, &rqueue, tblp);
 
 	if (todo->next != todo)
+	{
 		res = POLLIN | POLLRDNORM;
-	printk(KERN_DEBUG CLASS_NAME ": poll %d.\n",res);
+		printk(KERN_DEBUG CLASS_NAME ": poll %d.\n",res);
+	}
+	mutex_unlock(&rmutex);
+
 	return res;
 }
 
@@ -363,7 +371,7 @@ static void wiegand_timeoutfunc(struct timer_list *timer)
 		if(n == wiegandLength[ay_d19m_mode]+1)
 			s = ffmt[ay_d19m_mode](data0, n, rbuffer, sizeof(rbuffer) - 2);
 		else if(n == 26)
-			s = wiegand26(data0, rbuffer, sizeof(rbuffer) - 2);
+			s = ffmt[WIEGAND26](data0, n, rbuffer, sizeof(rbuffer) - 2);
 		else
 			s = snprintf(rbuffer, sizeof(rbuffer) - 2, "R=%d, M=%d, D=%8.8X, L=%d", RES_NOSUPORT, ay_d19m_mode, data0, n);
 

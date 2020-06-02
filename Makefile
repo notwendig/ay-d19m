@@ -12,6 +12,7 @@ obj-m += ay_d19m.o
 
 default:
 	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=${MODSRC} modules
+	sudo cp -f ay_d19m.ko /lib/modules/$(shell uname -r)
 	sudo depmod -a
 
 clean:
