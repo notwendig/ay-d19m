@@ -227,7 +227,7 @@ static __poll_t ayd19m_poll (struct file *filp,struct  poll_table_struct *tblp)
 	__poll_t res  = 0;
 	struct list_head *todo = (struct list_head *) filp->private_data;
 
-	mutex_lock_interruptible(&rmutex);
+	//mutex_lock_interruptible(&rmutex);
 	poll_wait(filp, &rqueue, tblp);
 
 	if (todo->next != todo)
@@ -235,7 +235,7 @@ static __poll_t ayd19m_poll (struct file *filp,struct  poll_table_struct *tblp)
 		res = POLLIN | POLLRDNORM;
 		printk(KERN_DEBUG CLASS_NAME ": poll %d.\n",res);
 	}
-	mutex_unlock(&rmutex);
+	//mutex_unlock(&rmutex);
 
 	return res;
 }
